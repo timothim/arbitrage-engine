@@ -134,9 +134,7 @@ class TestTriangleDiscovery:
         assert "ETHUSDT" in symbols
         assert "ETHBTC" in symbols
 
-    def test_get_triangles_for_symbol(
-        self, symbol_manager_extended: SymbolManager
-    ) -> None:
+    def test_get_triangles_for_symbol(self, symbol_manager_extended: SymbolManager) -> None:
         """Test filtering triangles by symbol."""
         discovery = TriangleDiscovery(symbol_manager_extended)
         discovery.build_graph()

@@ -32,13 +32,15 @@ def main() -> int:
     from arbitrage.core.engine import ArbitrageEngine
 
     # Print banner
-    print(f"""
+    print(
+        f"""
 ╔═══════════════════════════════════════════════════════════════╗
 ║     TRIANGULAR ARBITRAGE ENGINE v{__version__:<23}      ║
 ║                                                               ║
 ║     High-Frequency Trading Bot for Binance                    ║
 ╚═══════════════════════════════════════════════════════════════╝
-    """)
+    """
+    )
 
     # Load settings
     try:

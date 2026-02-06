@@ -299,7 +299,9 @@ class TriangleExecutor:
             elif isinstance(result, OrderResponse):
                 leg_result = LegResult(
                     leg=leg,
-                    status=OrderStatus(result.status) if result.status in [s.value for s in OrderStatus] else OrderStatus.FAILED,
+                    status=OrderStatus(result.status)
+                    if result.status in [s.value for s in OrderStatus]
+                    else OrderStatus.FAILED,
                     order_id=str(result.order_id),
                     filled_qty=result.executed_qty_float,
                     filled_price=result.avg_fill_price,

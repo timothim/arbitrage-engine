@@ -110,9 +110,7 @@ class TestRiskManager:
             timestamp_us=get_timestamp_us(),
         )
 
-    def test_check_trade_passes(
-        self, risk_manager: RiskManager, opportunity: Opportunity
-    ) -> None:
+    def test_check_trade_passes(self, risk_manager: RiskManager, opportunity: Opportunity) -> None:
         """Test that valid trade passes checks."""
         result = risk_manager.check_trade(opportunity, trade_size=50.0)
 

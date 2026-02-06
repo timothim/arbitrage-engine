@@ -29,8 +29,8 @@ class CLIReporter:
     BOX_TR = "\u2557"  # ╗
     BOX_BL = "\u255a"  # ╚
     BOX_BR = "\u255d"  # ╝
-    BOX_H = "\u2550"   # ═
-    BOX_V = "\u2551"   # ║
+    BOX_H = "\u2550"  # ═
+    BOX_V = "\u2551"  # ║
     BOX_LT = "\u2560"  # ╠
     BOX_RT = "\u2563"  # ╣
     BOX_CT = "\u256c"  # ╬

@@ -156,12 +156,15 @@ class SimulationEngine:
         self._stats.ticks_processed += 1
 
         # Emit price event
-        await self._emit_event("price", {
-            "symbol": bbo.symbol,
-            "bid": bbo.bid_price,
-            "ask": bbo.ask_price,
-            "spread_pct": bbo.spread_pct * 100,
-        })
+        await self._emit_event(
+            "price",
+            {
+                "symbol": bbo.symbol,
+                "bid": bbo.bid_price,
+                "ask": bbo.ask_price,
+                "spread_pct": bbo.spread_pct * 100,
+            },
+        )
 
         # Check for opportunities
         opportunities = self._detector.on_price_update(bbo)
@@ -206,13 +209,16 @@ class SimulationEngine:
         )
 
         # Emit execution event
-        await self._emit_event("execution", {
-            "triangle": opportunity.path.id,
-            "profit_pct": opportunity.profit_pct,
-            "profit_usd": simulated_profit,
-            "size": max_size,
-            "prices": opportunity.prices,
-        })
+        await self._emit_event(
+            "execution",
+            {
+                "triangle": opportunity.path.id,
+                "profit_pct": opportunity.profit_pct,
+                "profit_usd": simulated_profit,
+                "size": max_size,
+                "prices": opportunity.prices,
+            },
+        )
 
         logger.info(
             f"Simulated execution: {opportunity.path.id} "
@@ -232,17 +238,20 @@ class SimulationEngine:
 
         # Emit status events periodically
         while self._running:
-            await self._emit_event("status", {
-                "ticks": self._stats.ticks_processed,
-                "opportunities_found": self._stats.opportunities_found,
-                "opportunities_profitable": self._stats.opportunities_profitable,
-                "executions": self._stats.simulated_executions,
-                "total_profit": self._stats.total_simulated_profit,
-                "balance": self._simulated_balance,
-                "best_profit_pct": self._stats.best_opportunity_pct,
-                "triangles": len(self._triangles),
-                "symbols": len(self._simulator.get_symbols()),
-            })
+            await self._emit_event(
+                "status",
+                {
+                    "ticks": self._stats.ticks_processed,
+                    "opportunities_found": self._stats.opportunities_found,
+                    "opportunities_profitable": self._stats.opportunities_profitable,
+                    "executions": self._stats.simulated_executions,
+                    "total_profit": self._stats.total_simulated_profit,
+                    "balance": self._simulated_balance,
+                    "best_profit_pct": self._stats.best_opportunity_pct,
+                    "triangles": len(self._triangles),
+                    "symbols": len(self._simulator.get_symbols()),
+                },
+            )
             await asyncio.sleep(1)
 
         sim_task.cancel()

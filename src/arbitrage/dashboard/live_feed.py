@@ -157,9 +157,7 @@ class LiveDataFeed:
         """Main loop - connect and process messages."""
         symbols = self._get_all_symbols()
         streams = [f"{s.lower()}@bookTicker" for s in symbols]
-        combined_url = (
-            f"wss://stream.binance.com:9443/stream?streams={'/'.join(streams)}"
-        )
+        combined_url = f"wss://stream.binance.com:9443/stream?streams={'/'.join(streams)}"
 
         while self._state.running:
             try:
@@ -246,12 +244,15 @@ class LiveDataFeed:
             }
 
             # Emit price update
-            await self._emit("price", {
-                "symbol": symbol,
-                "bid": bid_price,
-                "ask": ask_price,
-                "spread": spread_pct,
-            })
+            await self._emit(
+                "price",
+                {
+                    "symbol": symbol,
+                    "bid": bid_price,
+                    "ask": ask_price,
+                    "spread": spread_pct,
+                },
+            )
 
             # Check triangles that use this symbol
             await self._check_opportunities(symbol)
@@ -310,14 +311,17 @@ class LiveDataFeed:
                 )
                 self._state.last_opportunity = opp
 
-                await self._emit("opportunity", {
-                    "triangle": triangle.id,
-                    "profit_pct": profit_pct,
-                    "profitable": profit_pct > 0,
-                    "prices": prices,
-                    "legs": opp.legs,
-                    "timestamp": opp.timestamp,
-                })
+                await self._emit(
+                    "opportunity",
+                    {
+                        "triangle": triangle.id,
+                        "profit_pct": profit_pct,
+                        "profitable": profit_pct > 0,
+                        "prices": prices,
+                        "legs": opp.legs,
+                        "timestamp": opp.timestamp,
+                    },
+                )
 
     @property
     def state(self) -> LiveFeedState:

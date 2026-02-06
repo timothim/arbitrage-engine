@@ -194,10 +194,7 @@ class MetricsCollector:
         if minutes == 0:
             return {}
 
-        return {
-            f"{name}_per_min": count / minutes
-            for name, count in self._counters.items()
-        }
+        return {f"{name}_per_min": count / minutes for name, count in self._counters.items()}
 
     def to_dict(self) -> dict[str, object]:
         """

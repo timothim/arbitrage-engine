@@ -154,9 +154,7 @@ class TrianglePath:
 
     def __post_init__(self) -> None:
         """Compute derived fields after initialization."""
-        object.__setattr__(
-            self, "symbols", frozenset(leg.symbol for leg in self.legs)
-        )
+        object.__setattr__(self, "symbols", frozenset(leg.symbol for leg in self.legs))
 
     def __hash__(self) -> int:
         return hash(self.id)

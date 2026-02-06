@@ -21,41 +21,68 @@ logger = logging.getLogger(__name__)
 # Symbol mappings per exchange (they use different formats)
 SYMBOL_MAPPINGS = {
     "binance": {
-        "BTC/USDT": "btcusdt", "ETH/USDT": "ethusdt", "SOL/USDT": "solusdt",
-        "XRP/USDT": "xrpusdt", "BNB/USDT": "bnbusdt", "DOGE/USDT": "dogeusdt",
-        "ADA/USDT": "adausdt", "AVAX/USDT": "avaxusdt",
+        "BTC/USDT": "btcusdt",
+        "ETH/USDT": "ethusdt",
+        "SOL/USDT": "solusdt",
+        "XRP/USDT": "xrpusdt",
+        "BNB/USDT": "bnbusdt",
+        "DOGE/USDT": "dogeusdt",
+        "ADA/USDT": "adausdt",
+        "AVAX/USDT": "avaxusdt",
     },
     "kraken": {
-        "BTC/USDT": "XBT/USDT", "ETH/USDT": "ETH/USDT", "SOL/USDT": "SOL/USDT",
-        "XRP/USDT": "XRP/USDT", "DOGE/USDT": "DOGE/USDT", "ADA/USDT": "ADA/USDT",
+        "BTC/USDT": "XBT/USDT",
+        "ETH/USDT": "ETH/USDT",
+        "SOL/USDT": "SOL/USDT",
+        "XRP/USDT": "XRP/USDT",
+        "DOGE/USDT": "DOGE/USDT",
+        "ADA/USDT": "ADA/USDT",
         "AVAX/USDT": "AVAX/USDT",
     },
     "coinbase": {
-        "BTC/USDT": "BTC-USDT", "ETH/USDT": "ETH-USDT", "SOL/USDT": "SOL-USDT",
-        "XRP/USDT": "XRP-USDT", "DOGE/USDT": "DOGE-USDT", "ADA/USDT": "ADA-USDT",
+        "BTC/USDT": "BTC-USDT",
+        "ETH/USDT": "ETH-USDT",
+        "SOL/USDT": "SOL-USDT",
+        "XRP/USDT": "XRP-USDT",
+        "DOGE/USDT": "DOGE-USDT",
+        "ADA/USDT": "ADA-USDT",
         "AVAX/USDT": "AVAX-USDT",
     },
     "okx": {
-        "BTC/USDT": "BTC-USDT", "ETH/USDT": "ETH-USDT", "SOL/USDT": "SOL-USDT",
-        "XRP/USDT": "XRP-USDT", "DOGE/USDT": "DOGE-USDT", "ADA/USDT": "ADA-USDT",
+        "BTC/USDT": "BTC-USDT",
+        "ETH/USDT": "ETH-USDT",
+        "SOL/USDT": "SOL-USDT",
+        "XRP/USDT": "XRP-USDT",
+        "DOGE/USDT": "DOGE-USDT",
+        "ADA/USDT": "ADA-USDT",
         "AVAX/USDT": "AVAX-USDT",
     },
     "bybit": {
-        "BTC/USDT": "BTCUSDT", "ETH/USDT": "ETHUSDT", "SOL/USDT": "SOLUSDT",
-        "XRP/USDT": "XRPUSDT", "DOGE/USDT": "DOGEUSDT", "ADA/USDT": "ADAUSDT",
+        "BTC/USDT": "BTCUSDT",
+        "ETH/USDT": "ETHUSDT",
+        "SOL/USDT": "SOLUSDT",
+        "XRP/USDT": "XRPUSDT",
+        "DOGE/USDT": "DOGEUSDT",
+        "ADA/USDT": "ADAUSDT",
         "AVAX/USDT": "AVAXUSDT",
     },
 }
 
 COMMON_SYMBOLS = [
-    "BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT",
-    "DOGE/USDT", "ADA/USDT", "AVAX/USDT",
+    "BTC/USDT",
+    "ETH/USDT",
+    "SOL/USDT",
+    "XRP/USDT",
+    "DOGE/USDT",
+    "ADA/USDT",
+    "AVAX/USDT",
 ]
 
 
 @dataclass
 class MultiExchangeState:
     """State for multi-exchange feed."""
+
     running: bool = False
     # symbol -> exchange -> {bid, ask}
     prices: dict[str, dict[str, dict[str, float]]] = field(default_factory=dict)
@@ -128,12 +155,15 @@ class MultiExchangeFeed:
         self._state.prices[symbol][exchange] = {"bid": bid, "ask": ask}
         self._state.ticks += 1
 
-        await self._emit("price", {
-            "symbol": symbol,
-            "exchange": exchange,
-            "bid": bid,
-            "ask": ask,
-        })
+        await self._emit(
+            "price",
+            {
+                "symbol": symbol,
+                "exchange": exchange,
+                "bid": bid,
+                "ask": ask,
+            },
+        )
 
     async def _check_opportunities(self) -> None:
         """Periodically check for cross-exchange opportunities."""
@@ -169,12 +199,15 @@ class MultiExchangeFeed:
                     # Only emit if there's a meaningful spread (positive or negative)
                     if abs(profit_pct) > 0.01:
                         self._state.opportunities += 1
-                        await self._emit("opportunity", {
-                            "type": "cross_exchange",
-                            "path": symbol,
-                            "profit_pct": profit_pct,
-                            "details": f"Buy {best_ask_ex} ${best_ask:.2f} → Sell {best_bid_ex} ${best_bid:.2f}",
-                        })
+                        await self._emit(
+                            "opportunity",
+                            {
+                                "type": "cross_exchange",
+                                "path": symbol,
+                                "profit_pct": profit_pct,
+                                "details": f"Buy {best_ask_ex} ${best_ask:.2f} → Sell {best_bid_ex} ${best_bid:.2f}",
+                            },
+                        )
 
     async def _run_binance(self) -> None:
         """Connect to Binance WebSocket."""
@@ -226,13 +259,17 @@ class MultiExchangeFeed:
 
                 async with session.ws_connect(url, heartbeat=30) as ws:
                     # Subscribe to ticker
-                    pairs = [SYMBOL_MAPPINGS["kraken"].get(s) for s in COMMON_SYMBOLS if s in SYMBOL_MAPPINGS["kraken"]]
+                    pairs = [
+                        SYMBOL_MAPPINGS["kraken"].get(s)
+                        for s in COMMON_SYMBOLS
+                        if s in SYMBOL_MAPPINGS["kraken"]
+                    ]
                     pairs = [p for p in pairs if p]
 
                     subscribe_msg = {
                         "event": "subscribe",
                         "pair": pairs,
-                        "subscription": {"name": "ticker"}
+                        "subscription": {"name": "ticker"},
                     }
                     await ws.send_str(orjson.dumps(subscribe_msg).decode())
                     await self._emit("connection", {"exchange": "Kraken", "connected": True})
@@ -248,7 +285,11 @@ class MultiExchangeFeed:
                                 ticker_data = data[1]
                                 pair = data[3]
 
-                                if isinstance(ticker_data, dict) and "b" in ticker_data and "a" in ticker_data:
+                                if (
+                                    isinstance(ticker_data, dict)
+                                    and "b" in ticker_data
+                                    and "a" in ticker_data
+                                ):
                                     bid = float(ticker_data["b"][0])
                                     ask = float(ticker_data["a"][0])
 
@@ -256,7 +297,9 @@ class MultiExchangeFeed:
                                     for std_sym, ex_sym in SYMBOL_MAPPINGS["kraken"].items():
                                         if ex_sym == pair:
                                             if bid > 0 and ask > 0:
-                                                await self._update_price("Kraken", std_sym, bid, ask)
+                                                await self._update_price(
+                                                    "Kraken", std_sym, bid, ask
+                                                )
                                             break
 
             except Exception as e:
@@ -277,8 +320,11 @@ class MultiExchangeFeed:
 
                 async with session.ws_connect(url, heartbeat=30) as ws:
                     # Subscribe to tickers
-                    args = [{"channel": "tickers", "instId": SYMBOL_MAPPINGS["okx"].get(s)}
-                            for s in COMMON_SYMBOLS if s in SYMBOL_MAPPINGS["okx"]]
+                    args = [
+                        {"channel": "tickers", "instId": SYMBOL_MAPPINGS["okx"].get(s)}
+                        for s in COMMON_SYMBOLS
+                        if s in SYMBOL_MAPPINGS["okx"]
+                    ]
 
                     subscribe_msg = {"op": "subscribe", "args": args}
                     await ws.send_str(orjson.dumps(subscribe_msg).decode())
@@ -320,13 +366,14 @@ class MultiExchangeFeed:
 
                 async with session.ws_connect(url, heartbeat=30) as ws:
                     # Subscribe to tickers
-                    symbols = [SYMBOL_MAPPINGS["bybit"].get(s) for s in COMMON_SYMBOLS if s in SYMBOL_MAPPINGS["bybit"]]
+                    symbols = [
+                        SYMBOL_MAPPINGS["bybit"].get(s)
+                        for s in COMMON_SYMBOLS
+                        if s in SYMBOL_MAPPINGS["bybit"]
+                    ]
                     symbols = [s for s in symbols if s]
 
-                    subscribe_msg = {
-                        "op": "subscribe",
-                        "args": [f"tickers.{s}" for s in symbols]
-                    }
+                    subscribe_msg = {"op": "subscribe", "args": [f"tickers.{s}" for s in symbols]}
                     await ws.send_str(orjson.dumps(subscribe_msg).decode())
                     await self._emit("connection", {"exchange": "Bybit", "connected": True})
 
@@ -365,13 +412,17 @@ class MultiExchangeFeed:
                 self._sessions.append(session)
 
                 async with session.ws_connect(url, heartbeat=30) as ws:
-                    products = [SYMBOL_MAPPINGS["coinbase"].get(s) for s in COMMON_SYMBOLS if s in SYMBOL_MAPPINGS["coinbase"]]
+                    products = [
+                        SYMBOL_MAPPINGS["coinbase"].get(s)
+                        for s in COMMON_SYMBOLS
+                        if s in SYMBOL_MAPPINGS["coinbase"]
+                    ]
                     products = [p for p in products if p]
 
                     subscribe_msg = {
                         "type": "subscribe",
                         "product_ids": products,
-                        "channels": ["ticker"]
+                        "channels": ["ticker"],
                     }
                     await ws.send_str(orjson.dumps(subscribe_msg).decode())
                     await self._emit("connection", {"exchange": "Coinbase", "connected": True})

@@ -114,9 +114,7 @@ class TestExecutionIntegration:
         result = await executor.execute(opportunity)
 
         assert result.is_success
-        assert result.total_profit > 0 or result.total_profit == pytest.approx(
-            0, abs=0.01
-        )
+        assert result.total_profit > 0 or result.total_profit == pytest.approx(0, abs=0.01)
         assert len(result.legs) == 3
 
     @pytest.mark.asyncio

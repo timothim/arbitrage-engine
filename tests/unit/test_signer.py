@@ -150,9 +150,7 @@ class TestOrderSignatureCache:
         assert "timestamp" in result
         assert "signature" in result
 
-    def test_get_signed_order_params_missing_key(
-        self, cache: OrderSignatureCache
-    ) -> None:
+    def test_get_signed_order_params_missing_key(self, cache: OrderSignatureCache) -> None:
         """Test error on missing cache key."""
         with pytest.raises(KeyError):
             cache.get_signed_order_params(

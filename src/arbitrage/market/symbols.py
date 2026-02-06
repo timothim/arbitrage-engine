@@ -87,11 +87,19 @@ class SymbolManager:
         notional_filter = data.get_filter("NOTIONAL") or data.get_filter("MIN_NOTIONAL")
 
         # Extract values with defaults
-        tick_size = float(price_filter.tick_size) if price_filter and price_filter.tick_size else 0.00000001
-        step_size = float(lot_filter.step_size) if lot_filter and lot_filter.step_size else 0.00000001
+        tick_size = (
+            float(price_filter.tick_size) if price_filter and price_filter.tick_size else 0.00000001
+        )
+        step_size = (
+            float(lot_filter.step_size) if lot_filter and lot_filter.step_size else 0.00000001
+        )
         min_qty = float(lot_filter.min_qty) if lot_filter and lot_filter.min_qty else 0.0
         max_qty = float(lot_filter.max_qty) if lot_filter and lot_filter.max_qty else float("inf")
-        min_notional = float(notional_filter.min_notional) if notional_filter and notional_filter.min_notional else 0.0
+        min_notional = (
+            float(notional_filter.min_notional)
+            if notional_filter and notional_filter.min_notional
+            else 0.0
+        )
 
         # Calculate precision from step sizes
         price_precision = self._precision_from_step(tick_size)

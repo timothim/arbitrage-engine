@@ -140,26 +140,28 @@ DEFAULT_DAILY_LOSS_LIMIT: Final[float] = 50.0
 MIN_VOLUME_USDT: Final[float] = 1_000_000.0
 
 # Symbols to always exclude (delisted, problematic, etc.)
-EXCLUDED_SYMBOLS: Final[frozenset[str]] = frozenset({
-    # Add problematic symbols here
-})
+EXCLUDED_SYMBOLS: Final[frozenset[str]] = frozenset(
+    {
+        # Add problematic symbols here
+    }
+)
 
 # Supported quote assets for triangular arbitrage
-SUPPORTED_QUOTE_ASSETS: Final[frozenset[str]] = frozenset({
-    "USDT",
-    "BTC",
-    "ETH",
-    "BNB",
-})
+SUPPORTED_QUOTE_ASSETS: Final[frozenset[str]] = frozenset(
+    {
+        "USDT",
+        "BTC",
+        "ETH",
+        "BNB",
+    }
+)
 
 
 # =============================================================================
 # Logging & Telemetry
 # =============================================================================
 
-LOG_FORMAT: Final[str] = (
-    "%(asctime)s.%(msecs)03d | %(levelname)-8s | %(name)s | %(message)s"
-)
+LOG_FORMAT: Final[str] = "%(asctime)s.%(msecs)03d | %(levelname)-8s | %(name)s | %(message)s"
 LOG_DATE_FORMAT: Final[str] = "%Y-%m-%d %H:%M:%S"
 
 # Metrics reporting interval (seconds)

@@ -185,9 +185,7 @@ class BinanceClient:
             else:
                 raise BinanceClientError(f"Unsupported method: {method}")
 
-    async def _handle_response(
-        self, response: aiohttp.ClientResponse
-    ) -> dict[str, Any]:
+    async def _handle_response(self, response: aiohttp.ClientResponse) -> dict[str, Any]:
         """Parse and validate response."""
         # Parse JSON with orjson
         text = await response.text()
@@ -242,9 +240,7 @@ class BinanceClient:
 
     async def get_account(self) -> AccountInfo:
         """Get account information including balances."""
-        data = await self._request(
-            "GET", ENDPOINT_ACCOUNT, signed=True, weight=10
-        )
+        data = await self._request("GET", ENDPOINT_ACCOUNT, signed=True, weight=10)
         return AccountInfo.model_validate(data)
 
     async def get_balance(self, asset: str) -> float:
@@ -344,9 +340,7 @@ class BinanceClient:
             "orderId": order_id,
         }
 
-        data = await self._request(
-            "DELETE", ENDPOINT_ORDER, params, signed=True, weight=1
-        )
+        data = await self._request("DELETE", ENDPOINT_ORDER, params, signed=True, weight=1)
         return CancelOrderResponse.model_validate(data)
 
     # =========================================================================

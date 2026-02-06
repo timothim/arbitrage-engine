@@ -84,9 +84,12 @@ class ArbitrageCalculator:
         # Calculate gross return
         # The formula depends on the direction of each leg
         gross_return = self._calculate_gross_return(
-            leg1.side, price1,
-            leg2.side, price2,
-            leg3.side, price3,
+            leg1.side,
+            price1,
+            leg2.side,
+            price2,
+            leg3.side,
+            price3,
         )
 
         # Apply fees
@@ -102,9 +105,15 @@ class ArbitrageCalculator:
 
         # Calculate maximum trade quantity
         max_trade_qty = self._calculate_max_quantity(
-            leg1.side, price1, qty1,
-            leg2.side, price2, qty2,
-            leg3.side, price3, qty3,
+            leg1.side,
+            price1,
+            qty1,
+            leg2.side,
+            price2,
+            qty2,
+            leg3.side,
+            price3,
+            qty3,
         )
 
         return Opportunity(
@@ -120,9 +129,12 @@ class ArbitrageCalculator:
 
     def _calculate_gross_return(
         self,
-        side1: OrderSide, price1: float,
-        side2: OrderSide, price2: float,
-        side3: OrderSide, price3: float,
+        side1: OrderSide,
+        price1: float,
+        side2: OrderSide,
+        price2: float,
+        side3: OrderSide,
+        price3: float,
     ) -> float:
         """
         Calculate gross return for a triangle.
@@ -157,9 +169,15 @@ class ArbitrageCalculator:
 
     def _calculate_max_quantity(
         self,
-        side1: OrderSide, price1: float, qty1: float,
-        side2: OrderSide, price2: float, qty2: float,
-        side3: OrderSide, price3: float, qty3: float,
+        side1: OrderSide,
+        price1: float,
+        qty1: float,
+        side2: OrderSide,
+        price2: float,
+        qty2: float,
+        side3: OrderSide,
+        price3: float,
+        qty3: float,
     ) -> float:
         """
         Calculate maximum trade size across all legs.
@@ -204,9 +222,12 @@ class ArbitrageCalculator:
             return False
 
         gross = self._calculate_gross_return(
-            leg1.side, p1,
-            leg2.side, p2,
-            leg3.side, p3,
+            leg1.side,
+            p1,
+            leg2.side,
+            p2,
+            leg3.side,
+            p3,
         )
 
         net = gross * self._fee_multiplier

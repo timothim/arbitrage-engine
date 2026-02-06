@@ -221,7 +221,7 @@ class LatencyLogger:
 
         # Trim buffer
         if len(self._measurements[category]) > self._buffer_size:
-            self._measurements[category] = self._measurements[category][-self._buffer_size:]
+            self._measurements[category] = self._measurements[category][-self._buffer_size :]
 
     def get_stats(self, category: str) -> dict[str, float]:
         """

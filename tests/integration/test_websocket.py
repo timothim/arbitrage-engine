@@ -30,6 +30,7 @@ class TestWebSocketIntegration:
         self, mock_ws: MockWebSocket, orderbook: OrderbookManager
     ) -> None:
         """Test that WebSocket messages update orderbook."""
+
         # Set up handler to update orderbook
         async def handler(data: dict) -> None:
             if "s" in data:
@@ -57,6 +58,7 @@ class TestWebSocketIntegration:
         self, mock_ws: MockWebSocket, orderbook: OrderbookManager
     ) -> None:
         """Test updates for multiple symbols."""
+
         async def handler(data: dict) -> None:
             if "s" in data:
                 orderbook.update_from_ticker(data)
@@ -151,6 +153,7 @@ class TestWebSocketIntegration:
         self, mock_ws: MockWebSocket, orderbook: OrderbookManager
     ) -> None:
         """Test handling rapid updates."""
+
         async def handler(data: dict) -> None:
             if "s" in data:
                 orderbook.update_from_ticker(data)

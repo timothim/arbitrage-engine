@@ -54,9 +54,7 @@ class TestArbitrageCalculator:
         """Test that None is returned when prices are missing."""
         empty_orderbook = OrderbookManager()
 
-        opportunity = calculator.calculate_opportunity(
-            triangle_usdt_btc_eth, empty_orderbook
-        )
+        opportunity = calculator.calculate_opportunity(triangle_usdt_btc_eth, empty_orderbook)
 
         assert opportunity is None
 
@@ -243,9 +241,12 @@ class TestGrossReturnCalculation:
         expected = (1 / 50000) * (1 / 0.06) * 3050
 
         result = calc._calculate_gross_return(
-            OrderSide.BUY, 50000.0,
-            OrderSide.BUY, 0.06,
-            OrderSide.SELL, 3050.0,
+            OrderSide.BUY,
+            50000.0,
+            OrderSide.BUY,
+            0.06,
+            OrderSide.SELL,
+            3050.0,
         )
 
         assert result == pytest.approx(expected, rel=0.0001)

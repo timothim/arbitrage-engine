@@ -155,9 +155,7 @@ class WebSocketConnection:
         self._state = ConnectionState.RECONNECTING
 
         while self._running and self._state != ConnectionState.CONNECTED:
-            logger.info(
-                f"[WS-{self._connection_id}] Reconnecting in {self._reconnect_delay:.1f}s"
-            )
+            logger.info(f"[WS-{self._connection_id}] Reconnecting in {self._reconnect_delay:.1f}s")
             await asyncio.sleep(self._reconnect_delay)
 
             if await self.connect():
@@ -325,9 +323,7 @@ class WebSocketManager:
             )
             self._connections.append(conn)
 
-        logger.info(
-            f"Created {len(self._connections)} connections for {len(symbols)} symbols"
-        )
+        logger.info(f"Created {len(self._connections)} connections for {len(symbols)} symbols")
 
     async def start(self) -> None:
         """Start all WebSocket connections."""

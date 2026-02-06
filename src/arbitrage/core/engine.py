@@ -265,8 +265,7 @@ class ArbitrageEngine:
             )
         else:
             logger.warning(
-                f"Execution failed: {opportunity.path.id} "
-                f"reason={result.error_message}"
+                f"Execution failed: {opportunity.path.id} " f"reason={result.error_message}"
             )
 
     async def run(self) -> None:

@@ -26,9 +26,7 @@ class MockWebSocket:
         self._running = False
         self._message_queue: asyncio.Queue[dict[str, Any]] = asyncio.Queue()
 
-    def add_handler(
-        self, handler: Callable[[dict[str, Any]], Coroutine[Any, Any, None]]
-    ) -> None:
+    def add_handler(self, handler: Callable[[dict[str, Any]], Coroutine[Any, Any, None]]) -> None:
         """Add a message handler."""
         self._handlers.append(handler)
 

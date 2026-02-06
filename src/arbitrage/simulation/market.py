@@ -92,15 +92,11 @@ class MarketSimulator:
         self._tick_count = 0
         self._opportunities_created = 0
 
-    def add_callback(
-        self, callback: Callable[[BBO], Coroutine[Any, Any, None]]
-    ) -> None:
+    def add_callback(self, callback: Callable[[BBO], Coroutine[Any, Any, None]]) -> None:
         """Add callback for price updates."""
         self._callbacks.append(callback)
 
-    def remove_callback(
-        self, callback: Callable[[BBO], Coroutine[Any, Any, None]]
-    ) -> None:
+    def remove_callback(self, callback: Callable[[BBO], Coroutine[Any, Any, None]]) -> None:
         """Remove a callback."""
         if callback in self._callbacks:
             self._callbacks.remove(callback)
@@ -153,10 +149,7 @@ class MarketSimulator:
         ]
 
         # Filter to triangles where we have all symbols
-        valid_triangles = [
-            t for t in triangles
-            if all(s in self._symbols for s in t)
-        ]
+        valid_triangles = [t for t in triangles if all(s in self._symbols for s in t)]
 
         if not valid_triangles:
             return

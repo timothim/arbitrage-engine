@@ -159,9 +159,7 @@ class OpportunityDetector:
                 continue
 
             # Calculate opportunity
-            opportunity = self._calculator.calculate_opportunity(
-                triangle, self._orderbook
-            )
+            opportunity = self._calculator.calculate_opportunity(triangle, self._orderbook)
 
             if opportunity and opportunity.profit_pct >= self._min_profit_threshold * 100:
                 opportunities.append(opportunity)
@@ -198,9 +196,7 @@ class OpportunityDetector:
                 continue
 
             # Calculate opportunity
-            opportunity = self._calculator.calculate_opportunity(
-                triangle, self._orderbook
-            )
+            opportunity = self._calculator.calculate_opportunity(triangle, self._orderbook)
 
             if opportunity and opportunity.profit_pct >= self._min_profit_threshold * 100:
                 opportunities.append(opportunity)
@@ -209,7 +205,7 @@ class OpportunityDetector:
         # Sort by profit (descending)
         opportunities.sort(key=lambda x: x.profit_pct, reverse=True)
 
-        return opportunities[:self._max_opportunities]
+        return opportunities[: self._max_opportunities]
 
     def get_best_opportunity(self) -> Opportunity | None:
         """

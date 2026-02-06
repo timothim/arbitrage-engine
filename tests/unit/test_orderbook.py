@@ -29,9 +29,7 @@ class TestOrderbookManager:
         assert orderbook_manager.update_count == 1
         assert orderbook_manager.has_symbol("BTCUSDT")
 
-    def test_get_bbo(
-        self, orderbook_manager: OrderbookManager, bbo_btcusdt: BBO
-    ) -> None:
+    def test_get_bbo(self, orderbook_manager: OrderbookManager, bbo_btcusdt: BBO) -> None:
         """Test retrieving BBO data."""
         orderbook_manager.update(bbo_btcusdt)
 
@@ -65,9 +63,7 @@ class TestOrderbookManager:
         assert "ETHUSDT" in result
         assert "NONEXISTENT" not in result
 
-    def test_has_all_symbols(
-        self, orderbook_manager_populated: OrderbookManager
-    ) -> None:
+    def test_has_all_symbols(self, orderbook_manager_populated: OrderbookManager) -> None:
         """Test checking for all symbols."""
         symbols = frozenset(["BTCUSDT", "ETHUSDT", "ETHBTC"])
 
@@ -140,9 +136,7 @@ class TestOrderbookManager:
         assert bbo.ask_price == 50010.0
         assert orderbook_manager.has_symbol("BTCUSDT")
 
-    def test_get_prices_for_triangle(
-        self, orderbook_manager_populated: OrderbookManager
-    ) -> None:
+    def test_get_prices_for_triangle(self, orderbook_manager_populated: OrderbookManager) -> None:
         """Test getting prices for triangle symbols."""
         symbols = ("BTCUSDT", "ETHBTC", "ETHUSDT")
 
@@ -187,9 +181,7 @@ class TestOrderbookManager:
         assert orderbook_manager_populated.size == 0
         assert orderbook_manager_populated.get("BTCUSDT") is None
 
-    def test_remove(
-        self, orderbook_manager: OrderbookManager, bbo_btcusdt: BBO
-    ) -> None:
+    def test_remove(self, orderbook_manager: OrderbookManager, bbo_btcusdt: BBO) -> None:
         """Test removing a specific symbol."""
         orderbook_manager.update(bbo_btcusdt)
         orderbook_manager.remove("BTCUSDT")

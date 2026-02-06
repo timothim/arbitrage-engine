@@ -39,13 +39,30 @@ class SimulationState:
 sim_state = SimulationState()
 
 # Triangular arbitrage config
-TRI_SYMBOLS = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "ETHBTC", "BNBBTC", "BNBETH",
-               "SOLUSDT", "SOLBTC", "XRPUSDT", "XRPBTC"]
+TRI_SYMBOLS = [
+    "BTCUSDT",
+    "ETHUSDT",
+    "BNBUSDT",
+    "ETHBTC",
+    "BNBBTC",
+    "BNBETH",
+    "SOLUSDT",
+    "SOLBTC",
+    "XRPUSDT",
+    "XRPBTC",
+]
 
 TRI_BASE_PRICES = {
-    "BTCUSDT": 97500.0, "ETHUSDT": 3450.0, "BNBUSDT": 680.0,
-    "ETHBTC": 0.0354, "BNBBTC": 0.0070, "BNBETH": 0.197,
-    "SOLUSDT": 195.0, "SOLBTC": 0.0020, "XRPUSDT": 2.45, "XRPBTC": 0.0000251,
+    "BTCUSDT": 97500.0,
+    "ETHUSDT": 3450.0,
+    "BNBUSDT": 680.0,
+    "ETHBTC": 0.0354,
+    "BNBBTC": 0.0070,
+    "BNBETH": 0.197,
+    "SOLUSDT": 195.0,
+    "SOLBTC": 0.0020,
+    "XRPUSDT": 2.45,
+    "XRPBTC": 0.0000251,
 }
 
 TRI_PATHS = [
@@ -56,10 +73,23 @@ TRI_PATHS = [
 ]
 
 # Cross-exchange simulation config
-CROSS_SIM_SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "DOGE/USDT", "ADA/USDT", "AVAX/USDT"]
+CROSS_SIM_SYMBOLS = [
+    "BTC/USDT",
+    "ETH/USDT",
+    "SOL/USDT",
+    "XRP/USDT",
+    "DOGE/USDT",
+    "ADA/USDT",
+    "AVAX/USDT",
+]
 CROSS_SIM_PRICES = {
-    "BTC/USDT": 97500.0, "ETH/USDT": 3450.0, "SOL/USDT": 195.0,
-    "XRP/USDT": 2.45, "DOGE/USDT": 0.32, "ADA/USDT": 0.95, "AVAX/USDT": 38.0,
+    "BTC/USDT": 97500.0,
+    "ETH/USDT": 3450.0,
+    "SOL/USDT": 195.0,
+    "XRP/USDT": 2.45,
+    "DOGE/USDT": 0.32,
+    "ADA/USDT": 0.95,
+    "AVAX/USDT": 38.0,
 }
 SIM_EXCHANGES = ["Binance", "Kraken", "Coinbase", "OKX", "Bybit"]
 
@@ -96,6 +126,7 @@ async def broadcast_event(event_type: str, data: dict[str, Any]) -> None:
     if not connected_clients:
         return
     import orjson
+
     message = orjson.dumps({"type": event_type, "data": data}).decode()
     disconnected = []
     for client in connected_clients:
@@ -120,31 +151,41 @@ async def run_triangular_simulation() -> None:
             spread = prices[symbol] * 0.0002
             sim_state.ticks += 1
 
-            await broadcast_event("price", {
-                "symbol": symbol,
-                "bid": prices[symbol] - spread/2,
-                "ask": prices[symbol] + spread/2,
-            })
+            await broadcast_event(
+                "price",
+                {
+                    "symbol": symbol,
+                    "bid": prices[symbol] - spread / 2,
+                    "ask": prices[symbol] + spread / 2,
+                },
+            )
 
         opp_counter += 1
         if opp_counter >= 12:
             opp_counter = 0
             path_name, symbols = random.choice(TRI_PATHS)
-            profit = random.uniform(0.02, 0.18) if random.random() < 0.4 else random.uniform(-0.25, 0.0)
+            profit = (
+                random.uniform(0.02, 0.18) if random.random() < 0.4 else random.uniform(-0.25, 0.0)
+            )
             sim_state.opportunities += 1
 
-            await broadcast_event("opportunity", {
-                "type": "triangular",
-                "path": path_name,
-                "profit_pct": profit,
-                "details": f"via {' → '.join(symbols)}",
-            })
+            await broadcast_event(
+                "opportunity",
+                {
+                    "type": "triangular",
+                    "path": path_name,
+                    "profit_pct": profit,
+                    "details": f"via {' → '.join(symbols)}",
+                },
+            )
 
         await asyncio.sleep(0.1)
 
 
 async def run_cross_exchange_simulation() -> None:
-    exchange_prices = {ex: {s: CROSS_SIM_PRICES[s] for s in CROSS_SIM_SYMBOLS} for ex in SIM_EXCHANGES}
+    exchange_prices = {
+        ex: {s: CROSS_SIM_PRICES[s] for s in CROSS_SIM_SYMBOLS} for ex in SIM_EXCHANGES
+    }
     opp_counter = 0
 
     while is_running:
@@ -152,19 +193,24 @@ async def run_cross_exchange_simulation() -> None:
             base = CROSS_SIM_PRICES[symbol]
             for exchange in SIM_EXCHANGES:
                 exchange_prices[exchange][symbol] += random.gauss(0, base * 0.00012)
-                exchange_prices[exchange][symbol] = max(base * 0.97, min(base * 1.03, exchange_prices[exchange][symbol]))
+                exchange_prices[exchange][symbol] = max(
+                    base * 0.97, min(base * 1.03, exchange_prices[exchange][symbol])
+                )
 
             sim_state.ticks += 1
 
             for exchange in SIM_EXCHANGES:
                 price = exchange_prices[exchange][symbol]
                 spread = price * 0.0003
-                await broadcast_event("price", {
-                    "symbol": symbol,
-                    "exchange": exchange,
-                    "bid": price - spread/2,
-                    "ask": price + spread/2,
-                })
+                await broadcast_event(
+                    "price",
+                    {
+                        "symbol": symbol,
+                        "exchange": exchange,
+                        "bid": price - spread / 2,
+                        "ask": price + spread / 2,
+                    },
+                )
 
         opp_counter += 1
         if opp_counter >= 8:
@@ -181,12 +227,15 @@ async def run_cross_exchange_simulation() -> None:
                 profit = ((high_price - low_price) / low_price) * 100 - 0.15
 
             sim_state.opportunities += 1
-            await broadcast_event("opportunity", {
-                "type": "cross_exchange",
-                "path": symbol,
-                "profit_pct": profit,
-                "details": f"Buy {low_ex} → Sell {high_ex}",
-            })
+            await broadcast_event(
+                "opportunity",
+                {
+                    "type": "cross_exchange",
+                    "path": symbol,
+                    "profit_pct": profit,
+                    "details": f"Buy {low_ex} → Sell {high_ex}",
+                },
+            )
 
         await asyncio.sleep(0.06)
 
@@ -272,10 +321,12 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
     connected_clients.append(websocket)
 
     import orjson
-    await websocket.send_text(orjson.dumps({
-        "type": "init",
-        "data": {"running": is_running, "mode": current_mode}
-    }).decode())
+
+    await websocket.send_text(
+        orjson.dumps(
+            {"type": "init", "data": {"running": is_running, "mode": current_mode}}
+        ).decode()
+    )
 
     try:
         while True:
@@ -294,7 +345,7 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
             connected_clients.remove(websocket)
 
 
-DASHBOARD_HTML = '''<!DOCTYPE html>
+DASHBOARD_HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -577,10 +628,10 @@ DASHBOARD_HTML = '''<!DOCTYPE html>
         connect();
     </script>
 </body>
-</html>'''
+</html>"""
 
 
-DOCS_HTML = '''<!DOCTYPE html>
+DOCS_HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1065,7 +1116,7 @@ wss://stream.bybit.com/v5/public/spot</code></pre>
         </div>
     </div>
 </body>
-</html>'''
+</html>"""
 
 
 app = create_app()
@@ -1073,15 +1124,24 @@ app = create_app()
 
 def main() -> None:
     import uvicorn
-    print("""
+
+    print(
+        """
 ╔═══════════════════════════════════════════════════════════════╗
 ║              ARBITRAGE ENGINE - DASHBOARD                     ║
 ╚═══════════════════════════════════════════════════════════════╝
 
 Dashboard: http://localhost:8000
 Press Ctrl+C to stop.
-    """)
-    uvicorn.run("arbitrage.dashboard.server:app", host="0.0.0.0", port=8000, reload=False, log_level="warning")
+    """
+    )
+    uvicorn.run(
+        "arbitrage.dashboard.server:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=False,
+        log_level="warning",
+    )
 
 
 if __name__ == "__main__":

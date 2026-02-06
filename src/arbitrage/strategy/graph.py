@@ -110,9 +110,7 @@ class TriangleDiscovery:
                 seen_paths.add(path_set)
 
                 # Build triangle
-                triangle = self._build_triangle(
-                    base_asset, first_hop, second_hop
-                )
+                triangle = self._build_triangle(base_asset, first_hop, second_hop)
                 if triangle:
                     triangles.append(triangle)
 
